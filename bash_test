@@ -1,0 +1,13 @@
+#!/bin/bash
+echo $*
+
+echo "blank line"
+A1=$1
+A2=$2
+
+shift 
+shift
+
+echo $*
+echo "blank line"
+echo $A1 $A2 $*

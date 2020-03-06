@@ -1,0 +1,81 @@
+#include <mpi.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+void send_single(void* buff, int bytes )
+{
+  MPI_Send(buff, bytes, MPI_UNSIGNED_CHAR, 1, 0, MPI_COMM_WORLD);
+  MPI_Recv(buff, bytes, MPI_UNSIGNED_CHAR,1,0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+}
+
+void recv_single(void* buff,int bytes)
+{
+  MPI_Recv(buff, bytes, MPI_UNSIGNED_CHAR,0,0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+  MPI_Send(buff, bytes, MPI_UNSIGNED_CHAR, 0, 0, MPI_COMM_WORLD);
+}
+
+double test_sender(int data_size,int amount)
+{
+  unsigned char* buff= malloc(data_size + 1000+1);
+  long long i;
+  for(i=0;i<amount ;i++)
+  {
+    buff[0] = i%255;
+    send_single(buff,data_size);
+    printf("%d\n",buff[0]);
+  }
+  free(buff);
+}
+
+double test_recv(int data_size,int amount)
+{
+  char* buff= malloc(data_size + 1000+1);
+  long long i;  
+  for(i=0;i<amount ;i++)
+  {
+    recv_single(buff,data_size);
+  }
+  free(buff);
+}
+
+
+
+void sender()
+{
+  MPI_Barrier(MPI_COMM_WORLD);
+  //char* txt= malloc(1000);
+  // strcpy(txt,"XD");
+  //send_single(txt,3);
+  test_sender(1,10);
+}
+
+void reciever()
+{
+  MPI_Barrier(MPI_COMM_WORLD);
+ // char* buf= malloc(1000);
+  //recv_single(buf,3);
+  //buf[1000-1]='\0';
+  //printf("%s\n",buf);
+  test_recv(1,10);
+}
+
+
+
+int main(int argc, char** argv) {
+  MPI_Init(NULL, NULL);
+  int world_rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
+  int world_size;
+  MPI_Comm_size(MPI_COMM_WORLD, &world_size);
+  // We are assuming at least 2 processes for this task
+  if (world_size < 2) {
+    fprintf(stderr, "World size must be greater than 1 for %s\n", argv[0]);
+    MPI_Abort(MPI_COMM_WORLD, 1); 
+  }
+  if (world_rank == 0) {
+    sender();
+  } else if (world_rank == 1) {
+    reciever();
+  }
+  MPI_Finalize();
+}

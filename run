@@ -1,0 +1,8 @@
+#!/bin/bash
+run_script_process_count=$1
+run_script_name=$2
+
+shift
+shift
+echo "mpiexec -machinefile ./allnodes -np $run_script_process_count ./${run_script_name}_c $*"
+mpiexec -machinefile ./allnodes -np $run_script_process_count ./${run_script_name}_c $*
