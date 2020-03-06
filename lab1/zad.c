@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define AMOUNT_OF_SIZES 28
+#define AMOUNT_OF_SIZES 22
 #define MSG_COUNT 1000
 #define RETRIES 2 
 
