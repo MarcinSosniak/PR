@@ -1,9 +1,13 @@
 #!/bin/bash
 git pull
+chmod u+x gitrun
+chmod u+x compile
+chmod u+x run
 gitrun_cores=$1
 gitrun_name=$2
 shift
 shift
 ./compile $gitrun_name
+chmod u+x ${gitrun_name}_c
 clear
 ./run $gitrun_cores $gitrun_name $*
