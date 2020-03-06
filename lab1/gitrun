@@ -9,5 +9,4 @@ shift
 shift
 ./compile $gitrun_name
 chmod u+x ${gitrun_name}_c
-clear
 ./run $gitrun_cores $gitrun_name $*
